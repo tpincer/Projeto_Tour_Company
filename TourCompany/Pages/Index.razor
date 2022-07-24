@@ -1,0 +1,86 @@
+﻿@page "/"
+
+@using TourCompany.Models;
+@inject IJSRuntime JSRuntime;
+@inject TourCompany.Interface.ITourCompanyService TourCompanyService;
+@using Syncfusion.Blazor.SplitButtons
+@inject NavigationManager UriHelper
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Data
+
+<PageTitle>Projeto Tour Company</PageTitle>
+
+<h1>Projeto Tour Company</h1>
+
+<a href="create" class="btn btn-success">Criar</a><br /><br />
+
+@if (pontosTuristicos!= null && pontosTuristicos.Count > 0)
+{
+			<SfGrid DataSource="@pontosTuristicos" AllowPaging="true" AllowSorting="true" AllowFiltering="true">
+
+			</SfGrid>
+}
+
+
+
+<table class="table table-responsive table-striped">
+
+	<thead>
+		<tr>
+			<th>Id</th>
+			<th>Nome</th>
+			<th>Descrição</th>
+			<th>Referência</th>
+			<th>Cidade</th>
+			<th></th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (pontosTuristicos != null && pontosTuristicos.Count > 0)
+		{
+			foreach(var item in pontosTuristicos)
+			{
+				<tr>
+					<td>@item.Id</td>
+					<td>@item.Name</td>
+					<td>@item.Description</td>
+					<td>@item.Reference</td>
+					<td>@item.City</td>
+					<td></td>
+					<td></td>
+					<td>
+						<a href="/edit/@item.Id" class="btn btn-warning">Atualizar</a><br /><br />
+						<button class="btn btn-danger" @onclick="async () => await DeleteTourCompany(item.Id) ">Deletar</button>
+					</td>
+				</tr>
+			}
+		}
+	</tbody>
+</table>
+
+@code{
+    List<PontosTuristicos> pontosTuristicos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        pontosTuristicos = await TourCompanyService.FindAll();
+    }
+
+    async Task DeleteTourCompany(Guid id)
+    {
+		var pontoSelecionado = pontosTuristicos.First(x => x.Id == id);
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Tem certeza que deseja excluir {pontoSelecionado.Name}?");
+        if (confirmed is false)
+            return;
+
+        var tourCompany = await TourCompanyService.GetBy(id);
+        await TourCompanyService.Delete(tourCompany);
+        pontosTuristicos = await TourCompanyService.FindAll();
+        StateHasChanged();
+    }
+
+
+}
+
+

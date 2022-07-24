@@ -1,0 +1,68 @@
+﻿@page "/create"
+
+@using TourCompany.Models;
+@inject NavigationManager NavigationManager;
+@inject TourCompany.Interface.ITourCompanyService TourCompanyService;
+
+<h1>Criar TourCompany</h1>
+
+<EditForm Model="pontosTuristicos" OnValidSubmit="CreateTourCompany">
+	<div class="form-group mb-3">
+		<label for="pontosTuristicosName">Nome</label>
+		<InputText @bind-Value="pontosTuristicos.Name" class="form-control" id="pontosTuristicosName" />
+
+	</div>
+
+	<div class="form-group mb-3">
+		<label for="pontosTuristicosDescription">Descrição</label>
+		<InputText @bind-Value="pontosTuristicos.Description" class="form-control" id="pontosTuristicosDescription" />
+
+	</div>
+
+	<div class="form-group mb-3">
+		<label for="pontosTuristicosReference">Referência</label>
+		<InputText @bind-Value="pontosTuristicos.Reference" class="form-control" id="pontosTuristicosReference" />
+
+	</div>
+
+	<div class="form-group mb-3">
+		<label for="pontosTuristicosCity">Cidade</label>
+		<InputText @bind-Value="pontosTuristicos.City" class="form-control" id="pontosTuristicosCity" />
+
+	</div>
+
+@*	<div class="form-group mb-3">
+		<label for="pontosTuristicosLocalization">Localização</label>
+		<InputText @bind-Value="pontosTuristicos.Localization" class="form-control" id="pontosTuristicosLocalization" />
+
+	</div>*@
+
+@*	<div class="form-group mb-3">
+		<select @bind=@pontosTuristicos.State>
+			<option value="">Selecione UF </option>
+			<option value="sp">SP</option>
+			<option value="pa">PA</option>
+			<option value="ba">BA</option>
+			<option value="rj">RJ</option>
+			<option value="ce">CE</option>
+
+		</select>
+
+	</div>*@
+
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+
+	<button class="btn btn-success" type="submit">Salvar</button>
+</EditForm>
+
+@code {
+	PontosTuristicos pontosTuristicos = new();
+
+	async Task CreateTourCompany()
+	{
+		pontosTuristicos.GenerateNewGuid();
+		await TourCompanyService.Add(pontosTuristicos);
+		NavigationManager.NavigateTo("/");
+	}
+}

@@ -1,0 +1,55 @@
+﻿@page "/edit/{id}"
+
+@using TourCompany.Models;
+@inject NavigationManager NavigationManager;
+@inject TourCompany.Interface.ITourCompanyService TourCompanyService;
+
+<h1>Editar TourCompany</h1>
+
+<EditForm Model="pontosTuristicos" OnValidSubmit="EditTourCompany">
+	<div class="form-group mb-3">
+		<label for="pontosTuristicosName">Nome</label>
+		<InputText @bind-Value="pontosTuristicos.Name" class="form-control" id="pontosTuristicosName" />
+
+	</div>
+
+	<div class="form-group mb-3">
+		<label for="pontosTuristicosDescription">Descrição</label>
+		<InputText @bind-Value="pontosTuristicos.Description" class="form-control" id="pontosTuristicosDescription" />
+
+	</div>
+
+	<div class="form-group mb-3">
+		<label for="pontosTuristicosReference">Referência</label>
+		<InputText @bind-Value="pontosTuristicos.Reference" class="form-control" id="pontosTuristicosReference" />
+
+	</div>
+
+	<div class="form-group mb-3">
+		<label for="pontosTuristicosCity">Cidade</label>
+		<InputText @bind-Value="pontosTuristicos.City" class="form-control" id="pontosTuristicosCity" />
+
+	</div>
+
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+
+	<button class="btn btn-success" type="submit">Salvar</button>
+</EditForm>
+
+@code {
+	PontosTuristicos pontosTuristicos = new();
+
+	[Parameter]public string id{ get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		pontosTuristicos = await TourCompanyService.GetBy(Guid.Parse(id));
+	}
+
+	async Task EditTourCompany()
+	{
+		await TourCompanyService.Update(pontosTuristicos);
+		NavigationManager.NavigateTo("/");
+	}
+}
