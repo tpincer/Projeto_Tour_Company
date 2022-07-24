@@ -14,7 +14,7 @@
       disponível na internet as cidades de acordo com o estado selecionado.</li>
      <li>Criar um menu de navegação para alternar entre o formulário de cadastro e a listagem.</li>
   </div>
-   
+   <br />
 
 Feito Com:
 HTML5, BOOTSTRAP, ASP NET CORE 6, BLAZOR, BANCO DE DADOS IN MEMORY
